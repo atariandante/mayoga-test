@@ -1,7 +1,14 @@
-import {NextPage} from 'next';
+import { NextPage } from 'next';
+
+// Components
+import { Layout } from '../components/Layout';
 
 const Index: NextPage = () => {
-    return <h1>Magoya Frontend Dev Test</h1>;
+    return (
+        <Layout>
+            Magoya Frontend Dev Test
+        </Layout>
+    )
 };
 
 export default Index;
