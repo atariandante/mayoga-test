@@ -1,0 +1,24 @@
+{
+    "name": "magoya-frontend-dev-test",
+    "version": "1.0.0",
+    "author": "Magoya",
+    "private": true,
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "dayjs": "1.8.24",
+        "next": "9.3.5",
+        "react": "16.13.1",
+        "react-dom": "16.13.1",
+        "uuid": "7.0.3"
+    },
+    "devDependencies": {
+        "@types/node": "13.11.1",
+        "@types/react": "16.9.34",
+        "@types/uuid": "7.0.2",
+        "typescript": "3.8.3"
+    }
+}

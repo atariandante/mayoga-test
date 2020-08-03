@@ -1,0 +1,26 @@
+[
+    {
+        "date": "2020-04-01T12:00:00.000Z",
+        "description": "Salary",
+        "amount": 100,
+        "id": "211e2792-110b-4461-ab6f-70892a3f4b4b"
+    },
+    {
+        "date": "2020-04-15T19:00:00.000Z",
+        "description": "Coffee",
+        "amount": -5,
+        "id": "d8e9958c-c348-404c-8b8f-e48dba7a7802"
+    },
+    {
+        "date": "2020-04-20T23:00:00.000Z",
+        "description": "Dinner with friends",
+        "amount": -30,
+        "id": "c3ffd28d-bdfe-409d-be46-396e06629c22"
+    },
+    {
+        "date": "2020-04-22T11:00:00.000Z",
+        "description": "Breakfast",
+        "amount": -10,
+        "id": "6d080059-fa47-4481-b130-08b1a221c2ed"
+    }
+]
