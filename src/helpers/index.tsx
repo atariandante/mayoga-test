@@ -14,3 +14,10 @@ export const toMoney = (amount: string | number, currency: string) => {
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ${currency} `;
 };
+
+export const orderByDate = <T extends { date: string }>(array: T[]) => array.sort((a, b) => {
+    const current = new Date(b.date).getTime();
+    const next = new Date(a.date).getTime();
+
+    return current - next;
+})

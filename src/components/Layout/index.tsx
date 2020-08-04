@@ -9,17 +9,16 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    CssBaseline,
     makeStyles
 } from '@material-ui/core';
-import { ViewModule, BarChart } from '@material-ui/icons';
+import { ViewModule, Add } from '@material-ui/icons';
 
 // Make styles
 const drawerWidth = 310;
 
 const pages = [
     { name: 'Dashboard', icon: ViewModule, url: '/' },
-    { name: 'stats', icon: BarChart, url: '/stats' }
+    { name: 'Create new transaction', icon: Add, url: '/new' }
 ]
 
 const useStyles = makeStyles((theme) => ({
@@ -34,14 +33,14 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     mainWrapper: {
-        backgroundColor: '#F6F8FF'
+        backgroundColor: theme.palette.grey[100]
     },
     mainContent: {
-        backgroundColor: '#FFF',
+        backgroundColor: theme.palette.common.white,
         marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
-        borderTopLeftRadius: 70,
-        // Replace with theme
+        borderTopLeftRadius: 50,
+        borderBottomLeftRadius: 50,
         minHeight: '100vh',
         paddingLeft: theme.spacing(10),
         paddingRight: theme.spacing(10),
@@ -52,35 +51,32 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    hide: {
-        display: 'none',
-    },
     drawer: {
         width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        // TODO: Add theme
-        backgroundColor: '#F6F8FF',
-    },
-    drawerOpen: {
-        width: drawerWidth,
-        // TODO: Add theme
-        backgroundColor: '#F6F8FF',
+        backgroundColor: theme.palette.grey[100],
         border: 'none',
-        transition: theme.transitions.create('width', {
+    },
+    activeListItem: {
+        color: theme.palette.primary.main,
+        borderLeft: `4px solid ${theme.palette.primary.main}`,
+        transition: theme.transitions.create('border', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
-    activeListItem: {
-        color: theme.palette.primary.main
+    activeListItemIcon: {
+        color: theme.palette.primary.main,
+        fontWeight: 800
     },
     toolbar: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
+        paddingTop: theme.spacing(5),
+        fontSize: 20,
+        color: theme.palette.primary.main,
+        fontWeight: 'bold',
         ...theme.mixins.toolbar,
     },
     content: {
@@ -95,16 +91,14 @@ export const Layout = ({ children }) => {
 
     return (
         <div className={clsx(classes.mainWrapper)}>
-            <CssBaseline />
-
             <Drawer
                 variant="permanent"
-                className={clsx(classes.drawer, classes.drawerOpen)}
-                classes={{paper: clsx(classes.drawerOpen)}}>
+                className={classes.drawer}
+                classes={{paper: clsx(classes.drawer)}}>
                 <div className={classes.toolbar}>
-                    LOGO
+                    LOGO / BRAND
                 </div>
-                
+
                 <List>
                     {pages.map((page, index) => {
                         const Icon = page.icon;
@@ -118,9 +112,11 @@ export const Layout = ({ children }) => {
                                         [classes.activeListItem]: page.url === router.route
                                     })}
                                     classes={{
-                                        selected: clsx(classes.activeListItem)
+                                        selected: classes.activeListItem,
                                     }}>
-                                    <ListItemIcon>
+                                    <ListItemIcon classes={{
+                                        root: page.url === router.route && classes.activeListItemIcon
+                                    }}>
                                         <Icon />
                                     </ListItemIcon>
 

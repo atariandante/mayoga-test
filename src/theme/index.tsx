@@ -1,6 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-import green from '@material-ui/core/colors/green';
+import { red, purple, green } from "@material-ui/core/colors";
 
 export const theme = createMuiTheme({
     palette: {
@@ -10,5 +9,18 @@ export const theme = createMuiTheme({
         secondary: {
             main: green[500],
         },
+        error: {
+            main: red[400]
+        },
+        common: {
+            white: '#FFF'
+        }
     },
+    typography: {
+        h5: {
+            fontSize: 30,
+            fontWeight: 'bold',
+            margin: 0
+        }
+    }
 });

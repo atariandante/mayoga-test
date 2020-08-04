@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NextPage } from 'next';
+import Link from 'next/link';
 import clsx from 'clsx';
 
 // Components
@@ -17,17 +18,24 @@ import {
     Fab,
     Typography,
     makeStyles,
-    Theme
+    Theme, Snackbar
 } from '@material-ui/core';
-import { Folder, Add } from '@material-ui/icons';
+import { Folder, Add, Refresh } from '@material-ui/icons';
 
 // Api
 import { readTransactions } from '../api';
 
 // Helpers
-import { formatDate, isPositiveNumber, toMoney } from '../helpers';
-import {Transaction} from "../types";
-import Link from "next/link";
+import { formatDate, isPositiveNumber, toMoney, orderByDate } from '../helpers';
+
+// Types
+import { AlertMessage, Transaction } from '../types';
+import {Alert} from "@material-ui/lab";
+
+const initialAlert: AlertMessage = {
+    message: '',
+    type: 'success'
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -37,9 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginBottom: 40
     },
     heading: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        margin: 0
+        ...theme.typography.h5,
+        color: theme.palette.primary.main
     },
     modal: {
         display: 'flex',
@@ -60,19 +67,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     expenseTotal: {
         fontSize: 15,
-        color: theme.palette.secondary.light,
+        color: theme.palette.error.main,
         cursor: 'default'
     },
     listItemContainer: {
         borderRadius: 70
     },
     isDebit: {
-        color: theme.palette.primary.light
+        color: theme.palette.primary.main
     },
     fab: {
         position: 'absolute',
         bottom: theme.spacing(2),
         right: theme.spacing(2),
+    },
+    dangerButton: {
+        color: theme.palette.error.main,
+        borderColor: theme.palette.error.main
     }
 }));
 
@@ -81,7 +92,7 @@ const Index: NextPage = (props: any) => {
     const [expenseId, setExpenseId] = useState<string>('');
     const [expenses, setExpenses] = useState<Transaction[]>(props.expenses);
     const [pending, setPending] = useState<boolean>(false);
-    const [error, setError] = useState<any>();
+    const [alert, setAlert] = useState<AlertMessage>(initialAlert)
     const classes = useStyles();
 
     const handleToggleModal = () => {
@@ -97,31 +108,82 @@ const Index: NextPage = (props: any) => {
         try {
             setPending(true);
 
-            await fetch(`/api/transactions/${expenseId}`, {
+            const res = await fetch(`/api/transactions/${expenseId}`, {
                 method: 'DELETE'
             });
 
-            setExpenses(expenses.filter(expense => expense.id !== expenseId));
+            if (res.ok) {
+                setExpenses(expenses.filter(expense => expense.id !== expenseId));
 
-            handleToggleModal();
+                handleToggleModal();
+
+                setAlert({
+                    message: 'Transaction deleted successfully',
+                    type: 'success'
+                })
+            } else {
+                res.text().then(response => {
+                    throw response
+                })
+            }
         } catch (error) {
-            setError(error);
+            setAlert({
+                message: 'Something whent wrong',
+                type: 'error'
+            })
         } finally {
             setPending(false);
         }
 
     }
 
+    const handleRefresh = async () => {
+        try {
+            setPending(true);
+
+            const response = await fetch(`/api/transactions`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                response.json().then<Transaction[]>(res => {
+                    const orderedExpenses = orderByDate<Transaction>(res);
+
+                    setExpenses(orderedExpenses);
+
+                    return res;
+                });
+            } else {
+                response.text().then(error => { throw error });
+            }
+
+        } catch (error) {
+            setAlert({
+                message: 'Something whent wrong...',
+                type: 'error'
+            })
+        } finally {
+            setPending(false)
+        }
+    }
+
     return (
         <div>
             <div className={classes.root}>
-                <h6 className={classes.heading}>
-                    EXPENSO APP
-                </h6>
+                <h5 className={classes.heading}>
+                    TRANSACTIONS LIST
+                </h5>
 
-                <div>
-                    Search here maybe
-                </div>
+                <Button
+                    onClick={handleRefresh}
+                    color="primary"
+                    startIcon={<Refresh />}>
+                    Refresh list
+                </Button>
             </div>
 
             <List>
@@ -129,11 +191,10 @@ const Index: NextPage = (props: any) => {
                     const isPositive: boolean = isPositiveNumber(expense.amount);
 
                     return (
-                        <Tooltip title="Click to remove this transaction">
+                        <Tooltip title="Click to remove this transaction" key={expense.id}>
                             <ListItem
                                 button
                                 onClick={handleExpenseClick(expense.id)}
-                                key={expense.id}
                                 className={classes.listItemContainer}>
                                 <ListItemIcon>
                                     <Folder />
@@ -171,46 +232,54 @@ const Index: NextPage = (props: any) => {
                 className={classes.modal}
                 open={alertModal || pending}
                 onClose={handleToggleModal}>
-                    <Paper elevation={3} className={classes.paper}>
-                        {!pending && (
-                            <>
-                               <Typography component="h5" variant="h5">
-                                   Wait!
-                               </Typography>
+                <Paper elevation={3} className={classes.paper}>
+                    {!pending && (
+                        <>
+                           <Typography component="h5" variant="h5">
+                               Wait!
+                           </Typography>
 
-                                <p className={classes.modalText}>
-                                    You're about to <b>delete</b> this transaction from the history list
-                                </p>
+                            <p className={classes.modalText}>
+                                You're about to <b>delete</b> this transaction from the history list
+                            </p>
 
-                                <div className={classes.modalFooter}>
-                                    <Button color="primary" onClick={handleToggleModal}>
-                                        Ups! Get me back
-                                    </Button>
+                            <div className={classes.modalFooter}>
+                                <Button
+                                    color="primary"
+                                    onClick={handleToggleModal}>
+                                    Ups! Get me back
+                                </Button>
 
-                                    <Button variant="outlined" color="secondary" onClick={handleDeleteExpense}>
-                                        I know, delete it
-                                    </Button>
-                                </div>
-                           </>
-                        )}
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleDeleteExpense}
+                                    classes={{
+                                        outlined: classes.dangerButton
+                                    }}>
+                                    I know, delete it
+                                </Button>
+                            </div>
+                       </>
+                    )}
 
-                        {pending && (
-                            <CircularProgress />
-                        )}
-                    </Paper>
+                    {pending && (
+                        <CircularProgress />
+                    )}
+                </Paper>
             </Modal>
+
+            <Snackbar open={Boolean(alert.message)} autoHideDuration={6000}>
+                <Alert severity={alert.type}>
+                    {alert.message}
+                </Alert>
+            </Snackbar>
         </div>
     )
 };
 
 export const getServerSideProps = async () => {
     const expenses = await readTransactions();
-    const orderedExpenses = expenses.sort((a, b) => {
-        const current = new Date(b.date).getTime();
-        const next = new Date(a.date).getTime();
-
-        return current - next;
-    })
+    const orderedExpenses = orderByDate(expenses)
 
     return { props: { expenses: orderedExpenses }};
 }
