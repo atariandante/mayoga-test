@@ -15,10 +15,12 @@ import {
     Paper,
     CircularProgress,
     Tooltip,
+    Zoom,
+    Snackbar,
     Fab,
     Typography,
     makeStyles,
-    Theme, Snackbar
+    Theme
 } from '@material-ui/core';
 import { Folder, Add, Refresh } from '@material-ui/icons';
 
@@ -30,7 +32,7 @@ import { formatDate, isPositiveNumber, toMoney, orderByDate } from '../helpers';
 
 // Types
 import { AlertMessage, Transaction } from '../types';
-import {Alert} from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 
 const initialAlert: AlertMessage = {
     message: '',
@@ -74,7 +76,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: 70
     },
     isDebit: {
-        color: theme.palette.primary.main
+        color: theme.palette.success.dark,
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.success.light,
+        borderRadius: 5
     },
     fab: {
         position: 'absolute',
@@ -210,6 +215,7 @@ const Index: NextPage = (props: any) => {
                                         <b className={clsx(classes.expenseTotal, {
                                             [classes.isDebit]: isPositive
                                         })}>
+                                            {isPositive && '+ '}
                                             {toMoney(expense.amount, 'USD')}
                                         </b>
                                     </Tooltip>
@@ -222,9 +228,17 @@ const Index: NextPage = (props: any) => {
 
             <Tooltip title="Add new transaction">
                 <Link href="/new">
-                    <Fab color="primary" className={classes.fab}>
-                        <Add />
-                    </Fab>
+                    <Zoom
+                        in
+                        timeout={200}
+                        style={{
+                            transitionDelay: '400ms',
+                        }}
+                        unmountOnExit>
+                        <Fab color="primary" className={classes.fab}>
+                            <Add />
+                        </Fab>
+                    </Zoom>
                 </Link>
             </Tooltip>
 

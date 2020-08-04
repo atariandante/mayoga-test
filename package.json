@@ -16,12 +16,14 @@
         "clsx": "^1.1.1",
         "dayjs": "1.8.24",
         "framer-motion": "^2.3.0",
+        "json2mq": "^0.2.0",
         "next": "9.3.5",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "uuid": "7.0.3"
     },
     "devDependencies": {
+        "@types/json2mq": "^0.2.0",
         "@types/node": "13.11.1",
         "@types/react": "16.9.34",
         "@types/uuid": "7.0.2",

@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import json2mq from 'json2mq';
 import clsx from 'clsx';
 
 // Components
@@ -9,9 +11,12 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    makeStyles
+    Button,
+    SwipeableDrawer,
+    makeStyles,
+    useMediaQuery
 } from '@material-ui/core';
-import { ViewModule, Add } from '@material-ui/icons';
+import { ViewModule, Add, FormatListBulleted } from '@material-ui/icons';
 
 // Make styles
 const drawerWidth = 310;
@@ -51,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    mobileMainContent: {
+        padding: theme.spacing(5),
+        backgroundColor: theme.palette.common.white
+    },
     drawer: {
         width: drawerWidth,
         backgroundColor: theme.palette.grey[100],
@@ -86,15 +95,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Layout = ({ children }) => {
+    const [drawer, setDrawer] = useState(false);
     const classes = useStyles();
     const router = useRouter();
+    const isMobile = useMediaQuery(
+        json2mq({
+            maxWidth: 900
+        })
+    );
 
-    return (
-        <div className={clsx(classes.mainWrapper)}>
-            <Drawer
-                variant="permanent"
-                className={classes.drawer}
-                classes={{paper: clsx(classes.drawer)}}>
+    const toggleDrawer = (
+        event: React.KeyboardEvent | React.MouseEvent,
+    ) => {
+        if (
+            event &&
+            event.type === 'keydown' &&
+            ((event as React.KeyboardEvent).key === 'Tab' ||
+                (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+            return;
+        }
+
+        setDrawer(old => !old);
+    };
+
+    const renderContent = () => {
+        return (
+            <>
                 <div className={classes.toolbar}>
                     LOGO / BRAND
                 </div>
@@ -107,6 +134,7 @@ export const Layout = ({ children }) => {
                             <Link href={page.url} key={index}>
                                 <ListItem
                                     button
+                                    onClick={toggleDrawer}
                                     selected={page.url === router.route}
                                     className={clsx({
                                         [classes.activeListItem]: page.url === router.route
@@ -126,6 +154,40 @@ export const Layout = ({ children }) => {
                         );
                     })}
                 </List>
+            </>
+        )
+    }
+
+    if (isMobile) {
+        return (
+            <div className={classes.mainWrapper}>
+                <SwipeableDrawer
+                    anchor="left"
+                    open={drawer}
+                    onClose={toggleDrawer}
+                    onOpen={toggleDrawer}>
+                    {renderContent()}
+                </SwipeableDrawer>
+
+                <main className={classes.mobileMainContent}>
+                    <Button
+                        onClick={toggleDrawer}
+                        color="primary"
+                        startIcon={<FormatListBulleted />} />
+
+                    {children}
+                </main>
+            </div>
+        )
+    }
+
+    return (
+        <div className={clsx(classes.mainWrapper)}>
+            <Drawer
+                variant="permanent"
+                className={classes.drawer}
+                classes={{paper: clsx(classes.drawer)}}>
+                {renderContent()}
             </Drawer>
 
             <main className={clsx(classes.mainContent)}>

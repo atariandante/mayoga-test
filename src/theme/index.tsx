@@ -12,6 +12,10 @@ export const theme = createMuiTheme({
         error: {
             main: red[400]
         },
+        success: {
+            main: green[400],
+            light: green[100]
+        },
         common: {
             white: '#FFF'
         }
