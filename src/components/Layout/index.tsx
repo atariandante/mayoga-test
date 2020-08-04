@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 
 // Components
+import Link from 'next/link';
 import {
     Drawer,
     List,
@@ -12,7 +13,6 @@ import {
     makeStyles
 } from '@material-ui/core';
 import { ViewModule, BarChart } from '@material-ui/icons';
-import Link from "next/link";
 
 // Make styles
 const drawerWidth = 310;
@@ -93,8 +93,6 @@ export const Layout = ({ children }) => {
     const classes = useStyles();
     const router = useRouter();
 
-    console.log(router.route);
-
     return (
         <div className={clsx(classes.mainWrapper)}>
             <CssBaseline />
@@ -112,9 +110,9 @@ export const Layout = ({ children }) => {
                         const Icon = page.icon;
 
                         return (
-                            <Link href={page.url}>
+                            <Link href={page.url} key={index}>
                                 <ListItem
-                                    button key={index}
+                                    button
                                     selected={page.url === router.route}
                                     className={clsx({
                                         [classes.activeListItem]: page.url === router.route
