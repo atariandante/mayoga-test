@@ -27,4 +27,6 @@ $ yarn run dev
 ```
 
 ## Build with
-![Material UI]("https://camo.githubusercontent.com/cf05625198fe7b6ad8a302d1ce16bc99b93ec2ac/68747470733a2f2f6d6174657269616c2d75692e636f6d2f7374617469632f6c6f676f2e737667")
+![Material UI]("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT7KipS2XtctKfRQGPviR0UZVQtUdISRw1wVg&usqp=CAU")
+![Framer motion]("https://octocourses.com/static/7bcadc9ec2ba0513c32383ea8ff863c7/630fb/framer-motion.png")
+![NextJS]("https://seeklogo.com/images/N/next-js-logo-7929BCD36F-seeklogo.com.png")
