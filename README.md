@@ -2,7 +2,7 @@
 
 This is a basic Next.js project with default config. You should be able to run the project without any explicit instructions (we would normally add them here for our real projects).
 
-## Instalation
+## Installation
 You can install the project dependencies right out of the box with
 
 ##### NPM
