@@ -20,7 +20,6 @@ import {
     Theme
 } from '@material-ui/core';
 import { Folder, Add } from '@material-ui/icons';
-import { Layout } from '../components/Layout';
 
 // Api
 import { readTransactions } from '../api';
@@ -114,7 +113,7 @@ const Index: NextPage = (props: any) => {
     }
 
     return (
-        <Layout>
+        <div>
             <div className={classes.root}>
                 <h6 className={classes.heading}>
                     EXPENSO APP
@@ -200,7 +199,7 @@ const Index: NextPage = (props: any) => {
                         )}
                     </Paper>
             </Modal>
-        </Layout>
+        </div>
     )
 };
 

@@ -1,13 +1,10 @@
 import { NextPage } from 'next';
 
-// Components
-import { Layout } from '../../components/Layout';
-
 const New: NextPage = () => {
     return (
-        <Layout>
+        <div>
             New page, ma maan!!
-        </Layout>
+        </div>
     );
 }
 
