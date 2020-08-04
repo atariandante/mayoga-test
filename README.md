@@ -27,6 +27,6 @@ $ yarn run dev
 ```
 
 ## Build with
-![Material UI]("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT7KipS2XtctKfRQGPviR0UZVQtUdISRw1wVg&usqp=CAU")
-![Framer motion]("https://octocourses.com/static/7bcadc9ec2ba0513c32383ea8ff863c7/630fb/framer-motion.png")
-![NextJS]("https://seeklogo.com/images/N/next-js-logo-7929BCD36F-seeklogo.com.png")
+<img width=50 alt="Material UI" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT7KipS2XtctKfRQGPviR0UZVQtUdISRw1wVg&usqp=CAU"></img>
+<img width=50 alt="Framer motion" src="https://octocourses.com/static/7bcadc9ec2ba0513c32383ea8ff863c7/630fb/framer-motion.png"></img>
+<img width=50 alt="NextJS" src="https://seeklogo.com/images/N/next-js-logo-7929BCD36F-seeklogo.com.png"></img>
