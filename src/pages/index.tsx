@@ -14,12 +14,12 @@ import {
     Paper,
     CircularProgress,
     Tooltip,
-    Chip,
+    Fab,
     Typography,
     makeStyles,
     Theme
 } from '@material-ui/core';
-import { Folder } from '@material-ui/icons';
+import { Folder, Add } from '@material-ui/icons';
 import { Layout } from '../components/Layout';
 
 // Api
@@ -27,7 +27,8 @@ import { readTransactions } from '../api';
 
 // Helpers
 import { formatDate, isPositiveNumber, toMoney } from '../helpers';
-import dayjs from "dayjs";
+import {Transaction} from "../types";
+import Link from "next/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -51,6 +52,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
+    modalText: {
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(4)
+    },
     paper: {
         padding: theme.spacing(4)
     },
@@ -64,13 +69,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     isDebit: {
         color: theme.palette.primary.light
+    },
+    fab: {
+        position: 'absolute',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
     }
 }));
 
 const Index: NextPage = (props: any) => {
     const [alertModal, setAlertModal] = useState<boolean>(false);
     const [expenseId, setExpenseId] = useState<string>('');
-    const [expenses, setExpenses] = useState<any[]>(props.expenses);
+    const [expenses, setExpenses] = useState<Transaction[]>(props.expenses);
     const [pending, setPending] = useState<boolean>(false);
     const [error, setError] = useState<any>();
     const classes = useStyles();
@@ -119,7 +129,6 @@ const Index: NextPage = (props: any) => {
                 {expenses.map(expense => {
                     const isPositive: boolean = isPositiveNumber(expense.amount);
 
-
                     return (
                         <Tooltip title="Click to remove this transaction">
                             <ListItem
@@ -151,6 +160,14 @@ const Index: NextPage = (props: any) => {
                 })}
             </List>
 
+            <Tooltip title="Add new transaction">
+                <Link href="/new">
+                    <Fab color="primary" className={classes.fab}>
+                        <Add />
+                    </Fab>
+                </Link>
+            </Tooltip>
+
             <Modal
                 className={classes.modal}
                 open={alertModal || pending}
@@ -158,11 +175,13 @@ const Index: NextPage = (props: any) => {
                     <Paper elevation={3} className={classes.paper}>
                         {!pending && (
                             <>
-                               <Typography component="h4" variant="h4">
-                                   Wait!!
+                               <Typography component="h5" variant="h5">
+                                   Wait!
                                </Typography>
 
-                                <p>You're about to delete this transaction from the history list</p>
+                                <p className={classes.modalText}>
+                                    You're about to <b>delete</b> this transaction from the history list
+                                </p>
 
                                 <div className={classes.modalFooter}>
                                     <Button color="primary" onClick={handleToggleModal}>
