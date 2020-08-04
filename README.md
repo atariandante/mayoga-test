@@ -1,6 +1,9 @@
 # Magoya - Frontend Dev Test
 
-This is a basic Next.js project with default config. You should be able to run the project without any explicit instructions (we would normally add them here for our real projects).
+This is a basic Next.js project with default config.
+
+You can see a demo here (not available yet)
+
 
 ## Installation
 You can install the project dependencies right out of the box with
@@ -25,6 +28,9 @@ or yarn
 ```
 $ yarn run dev
 ```
+
+## Time spend in the project
+This was build in 7 ~ 8 hours of work (research/coding/reading).
 
 ## Build with
 <img width=50 alt="Material UI" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT7KipS2XtctKfRQGPviR0UZVQtUdISRw1wVg&usqp=CAU"></img>

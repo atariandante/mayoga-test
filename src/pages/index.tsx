@@ -22,7 +22,7 @@ import {
     makeStyles,
     Theme
 } from '@material-ui/core';
-import { Folder, Add, Refresh } from '@material-ui/icons';
+import { Folder, Add, Refresh, ArrowUpward, ArrowDownward } from '@material-ui/icons';
 
 // Api
 import { readTransactions } from '../api';
@@ -69,17 +69,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     expenseTotal: {
         fontSize: 15,
-        color: theme.palette.error.main,
-        cursor: 'default'
+        padding: theme.spacing(1),
+        color: theme.palette.error.dark,
+        backgroundColor: theme.palette.error.light,
+        cursor: 'default',
+        borderRadius: 5
     },
     listItemContainer: {
-        borderRadius: 70
+        borderRadius: 10
     },
     isDebit: {
         color: theme.palette.success.dark,
-        padding: theme.spacing(1),
         backgroundColor: theme.palette.success.light,
-        borderRadius: 5
     },
     fab: {
         position: 'absolute',
@@ -89,6 +90,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     dangerButton: {
         color: theme.palette.error.main,
         borderColor: theme.palette.error.main
+    },
+    icon: {
+        color: theme.palette.error.main
+    },
+    creditIcon: {
+        color: theme.palette.success.main
     }
 }));
 
@@ -201,8 +208,11 @@ const Index: NextPage = (props: any) => {
                                 button
                                 onClick={handleExpenseClick(expense.id)}
                                 className={classes.listItemContainer}>
-                                <ListItemIcon>
-                                    <Folder />
+                                <ListItemIcon
+                                    className={
+                                        clsx(classes.icon, {[classes.creditIcon]: isPositive })
+                                    }>
+                                    {isPositive ? <ArrowUpward /> : <ArrowDownward />}
                                 </ListItemIcon>
 
                                 <ListItemText

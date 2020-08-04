@@ -10,7 +10,8 @@ export const theme = createMuiTheme({
             main: green[500],
         },
         error: {
-            main: red[400]
+            main: red[400],
+            light: red[100]
         },
         success: {
             main: green[400],
@@ -22,7 +23,7 @@ export const theme = createMuiTheme({
     },
     typography: {
         h5: {
-            fontSize: 30,
+            fontSize: 25,
             fontWeight: 'bold',
             margin: 0
         }
