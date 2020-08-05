@@ -26,12 +26,12 @@ const initialState: TransactionValues = {
 const initialErrors: Omit<TransactionValues, 'amount'> & { amount: string } = {
     ...initialState,
     amount: ''
-}
+};
 
 const initialAlert: AlertMessage = {
     message: '',
     type: 'success'
-}
+};
 
 const New: NextPage = () => {
     const [formData, setFormData] = useState(initialState);
@@ -44,7 +44,7 @@ const New: NextPage = () => {
     const handleValidate = () => {
         const fields = Object.keys(formData);
 
-        fields.map(field => {
+        fields.map((field: string) => {
             if (!formData[field] && formData[field] !== 0) {
                 setErrors(errors => ({
                     ...errors,
@@ -68,7 +68,7 @@ const New: NextPage = () => {
     const handleChange = (event) => {
         const value = event.target.value;
         const name = event.target.name;
-        
+
         setFormData(formData => ({
             ...formData,
             [name]: value
@@ -97,7 +97,7 @@ const New: NextPage = () => {
                     message: 'Transactions submitted successfully!',
                     type: 'success'
                 })
-                
+
                 setFormData(initialState)
             } catch (error) {
                 setAlert({
@@ -202,7 +202,7 @@ const New: NextPage = () => {
                         </div>
                     </div>
                 </form>
-                
+
                 <Snackbar open={Boolean(alert.message)} autoHideDuration={6000} onClose={handleCloseAlert}>
                     <Alert severity={alert.type}>
                         {alert.message}

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, CircularProgress, Grow, Paper, Modal as ModalContainer, Typography } from "@material-ui/core";
-
-// Components
-
+import {
+    Button, CircularProgress, Grow, Paper, Modal as ModalContainer, Typography,
+} from '@material-ui/core';
 
 // Styles
 import { useStyles } from './styles';
@@ -16,7 +15,7 @@ export const Modal = ({
     isLoading,
     onClickAction,
     title,
-    children
+    children,
 }: ModalProps) => {
     const classes = useStyles();
 
@@ -24,7 +23,8 @@ export const Modal = ({
         <ModalContainer
             className={classes.wrapper}
             open={show}
-            onClose={onClose}>
+            onClose={onClose}
+        >
             <Grow in={show} unmountOnExit timeout={200}>
                 <Paper elevation={3} className={classes.paper}>
                     {!isLoading && (
@@ -40,7 +40,8 @@ export const Modal = ({
                             <div className={classes.footer}>
                                 <Button
                                     color="primary"
-                                    onClick={onClose}>
+                                    onClick={onClose}
+                                >
                                     Ups! Get me back
                                 </Button>
 
@@ -48,8 +49,9 @@ export const Modal = ({
                                     variant="outlined"
                                     onClick={onClickAction}
                                     classes={{
-                                        outlined: classes.actionButton
-                                    }}>
+                                        outlined: classes.actionButton,
+                                    }}
+                                >
                                     I know, delete it
                                 </Button>
                             </div>

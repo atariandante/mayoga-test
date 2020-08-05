@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "rules": {
+    "indent": "off",
+    "react/jsx-indent": 0,
+    "react/jsx-indent-props": 0,
+    "@typescript-eslint/indent": ["error", 4],
+    "react/jsx-closing-tag-location": 1,
+    "import/prefer-default-export": "off",
+    "prefer-const": "error"
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  }
+}

@@ -5,4 +5,4 @@ export type ModalProps = {
     onClickAction: () => void
     onClose: () => void,
     title: string
-}
+};
