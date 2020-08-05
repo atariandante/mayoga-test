@@ -13,7 +13,7 @@ You can install the project dependencies right out of the box with
 $ npm i
 ```
 
-##### Yarn
+##### YARN
 ```
 $ yarn
 ```
@@ -21,10 +21,13 @@ $ yarn
 
 ## Run the project
 You can run the project with
+
+##### NPM
 ```
 $ npm run dev
 ```
-or yarn
+
+##### YARN
 ```
 $ yarn run dev
 ```
