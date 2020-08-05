@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import json2mq from 'json2mq';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
 // Components
 import Link from 'next/link';
@@ -20,6 +21,9 @@ import { ViewModule, Add, FormatListBulleted } from '@material-ui/icons';
 
 // Make styles
 const drawerWidth = 310;
+
+// Variants
+import { list, item, text } from '../../motions';
 
 const pages = [
     { name: 'Dashboard', icon: ViewModule, url: '/' },
@@ -86,19 +90,23 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 20,
         color: theme.palette.primary.main,
         fontWeight: 'bold',
+        margin: 0,
         ...theme.mixins.toolbar,
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
     },
+    ul: {
+        padding: 0
+    }
 }));
 
 export const Layout = ({ children }) => {
-    const [drawer, setDrawer] = useState(false);
-    const classes = useStyles();
+    const [drawer, setDrawer] = useState<boolean>(false);
     const router = useRouter();
-    const isMobile = useMediaQuery(
+    const classes = useStyles();
+    const isMobile: boolean = useMediaQuery(
         json2mq({
             maxWidth: 900
         })
@@ -122,38 +130,44 @@ export const Layout = ({ children }) => {
     const renderContent = () => {
         return (
             <>
-                <div className={classes.toolbar}>
+                <motion.h5 className={classes.toolbar} initial="hidden" animate="visible" variants={text}>
                     LOGO / BRAND
-                </div>
+                </motion.h5>
 
-                <List>
+                <motion.ul
+                    initial="hidden"
+                    animate="visible"
+                    variants={list}
+                    className={classes.ul}>
                     {pages.map((page, index) => {
                         const Icon = page.icon;
 
                         return (
                             <Link href={page.url} key={index}>
-                                <ListItem
-                                    button
-                                    onClick={toggleDrawer}
-                                    selected={page.url === router.route}
-                                    className={clsx({
-                                        [classes.activeListItem]: page.url === router.route
-                                    })}
-                                    classes={{
-                                        selected: classes.activeListItem,
-                                    }}>
-                                    <ListItemIcon classes={{
-                                        root: page.url === router.route && classes.activeListItemIcon
-                                    }}>
-                                        <Icon />
-                                    </ListItemIcon>
+                                <motion.li variants={item}>
+                                    <ListItem
+                                        button
+                                        onClick={toggleDrawer}
+                                        selected={page.url === router.route}
+                                        className={clsx({
+                                            [classes.activeListItem]: page.url === router.route
+                                        })}
+                                        classes={{
+                                            selected: classes.activeListItem,
+                                        }}>
+                                        <ListItemIcon classes={{
+                                            root: page.url === router.route && classes.activeListItemIcon
+                                        }}>
+                                            <Icon />
+                                        </ListItemIcon>
 
-                                    <ListItemText primary={page.name}/>
-                                </ListItem>
+                                        <ListItemText primary={page.name}/>
+                                    </ListItem>
+                                </motion.li>
                             </Link>
                         );
                     })}
-                </List>
+                </motion.ul>
             </>
         )
     }

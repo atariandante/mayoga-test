@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -6,23 +6,20 @@ import clsx from 'clsx';
 // Components
 import {
     Button,
-    Modal,
     List,
     ListItem,
     ListItemText,
     ListItemIcon,
     ListItemSecondaryAction,
-    Paper,
-    CircularProgress,
     Tooltip,
     Zoom,
     Snackbar,
     Fab,
-    Typography,
     makeStyles,
     Theme
 } from '@material-ui/core';
-import { Folder, Add, Refresh, ArrowUpward, ArrowDownward } from '@material-ui/icons';
+import { Alert } from "@material-ui/lab";
+import { Add, Refresh, ArrowUpward, ArrowDownward } from '@material-ui/icons';
 
 // Api
 import { readTransactions } from '../api';
@@ -32,72 +29,15 @@ import { formatDate, isPositiveNumber, toMoney, orderByDate } from '../helpers';
 
 // Types
 import { AlertMessage, Transaction } from '../types';
-import { Alert } from "@material-ui/lab";
+import { Modal } from "../components";
+
+// Styles
+import { useStyles } from './styles';
 
 const initialAlert: AlertMessage = {
     message: '',
     type: 'success'
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 40
-    },
-    heading: {
-        ...theme.typography.h5,
-        color: theme.palette.primary.main
-    },
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    modalFooter: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    modalText: {
-        marginTop: theme.spacing(4),
-        marginBottom: theme.spacing(4)
-    },
-    paper: {
-        padding: theme.spacing(4)
-    },
-    expenseTotal: {
-        fontSize: 15,
-        padding: theme.spacing(1),
-        color: theme.palette.error.dark,
-        backgroundColor: theme.palette.error.light,
-        cursor: 'default',
-        borderRadius: 5
-    },
-    listItemContainer: {
-        borderRadius: 10
-    },
-    isDebit: {
-        color: theme.palette.success.dark,
-        backgroundColor: theme.palette.success.light,
-    },
-    fab: {
-        position: 'absolute',
-        bottom: theme.spacing(2),
-        right: theme.spacing(2),
-    },
-    dangerButton: {
-        color: theme.palette.error.main,
-        borderColor: theme.palette.error.main
-    },
-    icon: {
-        color: theme.palette.error.main
-    },
-    creditIcon: {
-        color: theme.palette.success.main
-    }
-}));
 
 const Index: NextPage = (props: any) => {
     const [alertModal, setAlertModal] = useState<boolean>(false);
@@ -199,7 +139,7 @@ const Index: NextPage = (props: any) => {
             </div>
 
             <List>
-                {expenses.map(expense => {
+                {expenses.map((expense: Transaction) => {
                     const isPositive: boolean = isPositiveNumber(expense.amount);
 
                     return (
@@ -236,60 +176,29 @@ const Index: NextPage = (props: any) => {
                 })}
             </List>
 
-            <Tooltip title="Add new transaction">
-                <Link href="/new">
-                    <Zoom
-                        in
-                        timeout={200}
-                        style={{
-                            transitionDelay: '400ms',
-                        }}
-                        unmountOnExit>
-                        <Fab color="primary" className={classes.fab}>
-                            <Add />
-                        </Fab>
-                    </Zoom>
-                </Link>
-            </Tooltip>
+            <Link href="/new">
+                <Zoom
+                    in
+                    unmountOnExit
+                    timeout={200}
+                    style={{
+                        transitionDelay: '400ms',
+                    }}>
+                    <Fab color="primary" className={classes.fab}>
+                        <Add />
+                    </Fab>
+                </Zoom>
+            </Link>
 
             <Modal
-                className={classes.modal}
-                open={alertModal || pending}
-                onClose={handleToggleModal}>
-                <Paper elevation={3} className={classes.paper}>
-                    {!pending && (
-                        <>
-                           <Typography component="h5" variant="h5">
-                               Wait!
-                           </Typography>
-
-                            <p className={classes.modalText}>
-                                You're about to <b>delete</b> this transaction from the history list
-                            </p>
-
-                            <div className={classes.modalFooter}>
-                                <Button
-                                    color="primary"
-                                    onClick={handleToggleModal}>
-                                    Ups! Get me back
-                                </Button>
-
-                                <Button
-                                    variant="outlined"
-                                    onClick={handleDeleteExpense}
-                                    classes={{
-                                        outlined: classes.dangerButton
-                                    }}>
-                                    I know, delete it
-                                </Button>
-                            </div>
-                       </>
-                    )}
-
-                    {pending && (
-                        <CircularProgress />
-                    )}
-                </Paper>
+                title="Wait!"
+                show={alertModal || pending}
+                onClickAction={handleDeleteExpense}
+                onClose={handleToggleModal}
+                isLoading={pending}>
+                <span>
+                    You're about to <b>delete</b> this transaction from the history list
+                </span>
             </Modal>
 
             <Snackbar open={Boolean(alert.message)} autoHideDuration={6000}>
