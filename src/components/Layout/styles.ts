@@ -72,4 +72,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
     ul: {
         padding: 0,
     },
+    waterMark: {
+    },
+    contentWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: '100%',
+    },
 }));

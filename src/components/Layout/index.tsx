@@ -26,6 +26,9 @@ import { list, item, text } from '../../motions';
 // Types
 import { LayoutProps } from './types';
 
+// Constants
+import { github } from '../../contants';
+
 const pages = [
     { name: 'Dashboard', icon: ViewModule, url: '/' },
     { name: 'Create new transaction', icon: Add, url: '/new' }
@@ -58,46 +61,52 @@ export const Layout = ({ children }: LayoutProps) => {
 
     const renderContent = () => {
         return (
-            <>
-                <motion.h5 className={classes.toolbar} initial="hidden" animate="visible" variants={text}>
-                    LOGO / BRAND
+            <div className={classes.contentWrapper}>
+                <div>
+                    <motion.h5 className={classes.toolbar} initial="hidden" animate="visible" variants={text}>
+                        LOGO / BRAND
+                    </motion.h5>
+
+                    <motion.ul
+                        initial="hidden"
+                        animate="visible"
+                        variants={list}
+                        className={classes.ul}>
+                        {pages.map((page, index) => {
+                            const Icon = page.icon;
+
+                            return (
+                                <Link href={page.url} key={index}>
+                                    <motion.li variants={item}>
+                                        <ListItem
+                                            button
+                                            onClick={toggleDrawer}
+                                            selected={page.url === router.route}
+                                            className={clsx({
+                                                [classes.activeListItem]: page.url === router.route
+                                            })}
+                                            classes={{
+                                                selected: classes.activeListItem,
+                                            }}>
+                                            <ListItemIcon classes={{
+                                                root: page.url === router.route ? classes.activeListItemIcon : undefined
+                                            }}>
+                                                <Icon />
+                                            </ListItemIcon>
+
+                                            <ListItemText primary={page.name}/>
+                                        </ListItem>
+                                    </motion.li>
+                                </Link>
+                            );
+                        })}
+                    </motion.ul>
+                </div>
+
+                <motion.h5 className={classes.waterMark} initial="hidden" animate="visible" variants={text} custom={0.5}>
+                    Coded with ❤️ by <a href={github} target="_blank">@atariandante</a>
                 </motion.h5>
-
-                <motion.ul
-                    initial="hidden"
-                    animate="visible"
-                    variants={list}
-                    className={classes.ul}>
-                    {pages.map((page, index) => {
-                        const Icon = page.icon;
-
-                        return (
-                            <Link href={page.url} key={index}>
-                                <motion.li variants={item}>
-                                    <ListItem
-                                        button
-                                        onClick={toggleDrawer}
-                                        selected={page.url === router.route}
-                                        className={clsx({
-                                            [classes.activeListItem]: page.url === router.route
-                                        })}
-                                        classes={{
-                                            selected: classes.activeListItem,
-                                        }}>
-                                        <ListItemIcon classes={{
-                                            root: page.url === router.route ? classes.activeListItemIcon : undefined
-                                        }}>
-                                            <Icon />
-                                        </ListItemIcon>
-
-                                        <ListItemText primary={page.name}/>
-                                    </ListItem>
-                                </motion.li>
-                            </Link>
-                        );
-                    })}
-                </motion.ul>
-            </>
+            </div>
         )
     }
 
