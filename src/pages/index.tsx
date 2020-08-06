@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import {GetServerSideProps, NextPage} from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import clsx from 'clsx';
+import json2mq from 'json2mq';
 
 // Components
 import {
@@ -14,12 +15,14 @@ import {
     Tooltip,
     Zoom,
     Snackbar,
-    Fab,
+    Fab, useMediaQuery,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
     Add, Refresh, ArrowUpward, ArrowDownward,
 } from '@material-ui/icons';
+
+import { Modal } from '../components';
 
 // Api
 import { readTransactions } from '../api';
@@ -31,7 +34,6 @@ import {
 
 // Types
 import { AlertMessage, Transaction, HomePageProps } from '../types';
-import { Modal } from '../components';
 
 // Styles
 import { useStyles } from './styles';
@@ -48,6 +50,11 @@ const Index: NextPage<HomePageProps> = ({ transactions }) => {
     const [pending, setPending] = useState<boolean>(false);
     const [alert, setAlert] = useState<AlertMessage>(initialAlert);
     const classes = useStyles();
+    const isMobile: boolean = useMediaQuery(
+        json2mq({
+            maxWidth: 900,
+        }),
+    );
 
     const handleToggleModal = () => {
         setAlertModal((oldValue) => !oldValue);
@@ -134,7 +141,7 @@ const Index: NextPage<HomePageProps> = ({ transactions }) => {
                     color="primary"
                     startIcon={<Refresh />}
                 >
-                    Refresh list
+                    {isMobile ? '' : 'Refresh list'}
                 </Button>
             </div>
 

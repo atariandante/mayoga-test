@@ -1,4 +1,4 @@
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles, Theme } from '@material-ui/core';
 
 const drawerWidth = 310;
 
@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
         }),
     },
     mainWrapper: {
-        backgroundColor: theme.palette.grey[100]
+        backgroundColor: theme.palette.grey[100],
     },
     mainContent: {
         backgroundColor: theme.palette.common.white,
@@ -33,8 +33,8 @@ export const useStyles = makeStyles((theme: Theme) => ({
         }),
     },
     mobileMainContent: {
-        padding: theme.spacing(5),
-        backgroundColor: theme.palette.common.white
+        padding: theme.spacing(2),
+        backgroundColor: theme.palette.common.white,
     },
     drawer: {
         width: drawerWidth,
@@ -51,7 +51,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
     activeListItemIcon: {
         color: theme.palette.primary.main,
-        fontWeight: 800
+        fontWeight: 800,
     },
     toolbar: {
         display: 'flex',
@@ -70,6 +70,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(3),
     },
     ul: {
-        padding: 0
-    }
+        padding: 0,
+    },
 }));
