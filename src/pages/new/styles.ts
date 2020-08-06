@@ -5,11 +5,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 40
+        marginBottom: 40,
     },
     headText: {
         ...theme.typography.h5,
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
     },
     form: {
         width: 800,
@@ -34,13 +34,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
         flex: 1,
     },
     spacedInput: {
-        marginRight: theme.spacing(2)
+        marginRight: theme.spacing(2),
     },
     submitButton: {
         margin: theme.spacing(1),
         position: 'relative',
         display: 'flex',
-        flex: 1
+        flex: 1,
     },
     submitSpinner: {
         position: 'absolute',
@@ -48,5 +48,5 @@ export const useStyles = makeStyles((theme: Theme) => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12,
-    }
+    },
 }));

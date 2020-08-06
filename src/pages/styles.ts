@@ -5,11 +5,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 40
+        marginBottom: 40,
     },
     heading: {
         ...theme.typography.h5,
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
     },
     expenseTotal: {
         fontSize: 15,
@@ -17,10 +17,10 @@ export const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.error.dark,
         backgroundColor: theme.palette.error.light,
         cursor: 'default',
-        borderRadius: 5
+        borderRadius: 5,
     },
     listItemContainer: {
-        borderRadius: 10
+        borderRadius: 10,
     },
     isDebit: {
         color: theme.palette.success.dark,
@@ -32,9 +32,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
         right: theme.spacing(2),
     },
     icon: {
-        color: theme.palette.error.main
+        color: theme.palette.error.main,
     },
     creditIcon: {
-        color: theme.palette.success.main
-    }
+        color: theme.palette.success.main,
+    },
 }));

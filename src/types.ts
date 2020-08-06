@@ -12,4 +12,10 @@ export type TransactionValues = Omit<Transaction, 'id'>;
 export type AlertMessage = {
     message: string;
     type: Color
-}
+};
+
+export type TransactionErrors = Omit<TransactionValues, 'amount'> & { amount: string };
+
+export type HomePageProps = {
+    transactions: Transaction[]
+};

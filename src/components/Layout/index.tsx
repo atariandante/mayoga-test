@@ -85,7 +85,7 @@ export const Layout = ({ children }: LayoutProps) => {
                                             selected: classes.activeListItem,
                                         }}>
                                         <ListItemIcon classes={{
-                                            root: page.url === router.route && classes.activeListItemIcon
+                                            root: page.url === router.route ? classes.activeListItemIcon : undefined
                                         }}>
                                             <Icon />
                                         </ListItemIcon>

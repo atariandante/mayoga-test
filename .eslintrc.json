@@ -12,7 +12,11 @@
     "@typescript-eslint/indent": ["error", 4],
     "react/jsx-closing-tag-location": 1,
     "import/prefer-default-export": "off",
-    "prefer-const": "error"
+    "prefer-const": "error",
+    "react/react-in-jsx-scope": "off",
+    "max-len": ["error", 120],
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off"
   },
   "parserOptions": {
     "project": "./tsconfig.json"

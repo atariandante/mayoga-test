@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NextPage } from 'next';
+import {GetServerSideProps, NextPage} from 'next';
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -15,44 +15,46 @@ import {
     Zoom,
     Snackbar,
     Fab,
-    makeStyles,
-    Theme
 } from '@material-ui/core';
-import { Alert } from "@material-ui/lab";
-import { Add, Refresh, ArrowUpward, ArrowDownward } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
+import {
+    Add, Refresh, ArrowUpward, ArrowDownward,
+} from '@material-ui/icons';
 
 // Api
 import { readTransactions } from '../api';
 
 // Helpers
-import { formatDate, isPositiveNumber, toMoney, orderByDate } from '../helpers';
+import {
+    formatDate, isPositiveNumber, toMoney, orderByDate,
+} from '../helpers';
 
 // Types
-import { AlertMessage, Transaction } from '../types';
-import { Modal } from "../components";
+import { AlertMessage, Transaction, HomePageProps } from '../types';
+import { Modal } from '../components';
 
 // Styles
 import { useStyles } from './styles';
 
 const initialAlert: AlertMessage = {
     message: '',
-    type: 'success'
-}
+    type: 'success',
+};
 
-const Index: NextPage = (props: any) => {
+const Index: NextPage<HomePageProps> = ({ transactions }) => {
     const [alertModal, setAlertModal] = useState<boolean>(false);
     const [expenseId, setExpenseId] = useState<string>('');
-    const [expenses, setExpenses] = useState<Transaction[]>(props.expenses);
+    const [expenses, setExpenses] = useState<Transaction[]>(transactions);
     const [pending, setPending] = useState<boolean>(false);
-    const [alert, setAlert] = useState<AlertMessage>(initialAlert)
+    const [alert, setAlert] = useState<AlertMessage>(initialAlert);
     const classes = useStyles();
 
     const handleToggleModal = () => {
-        setAlertModal(oldValue => !oldValue);
+        setAlertModal((oldValue) => !oldValue);
     };
 
     const handleExpenseClick = (id: string) => () => {
-        setExpenseId(id)
+        setExpenseId(id);
         handleToggleModal();
     };
 
@@ -60,68 +62,65 @@ const Index: NextPage = (props: any) => {
         try {
             setPending(true);
 
-            const res = await fetch(`/api/transactions/${expenseId}`, {
-                method: 'DELETE'
+            const res: Response = await fetch(`/api/transactions/${expenseId}`, {
+                method: 'DELETE',
             });
 
             if (res.ok) {
-                setExpenses(expenses.filter(expense => expense.id !== expenseId));
+                setExpenses(expenses.filter((expense: Transaction) => expense.id !== expenseId));
 
                 handleToggleModal();
 
                 setAlert({
                     message: 'Transaction deleted successfully',
-                    type: 'success'
-                })
+                    type: 'success',
+                });
             } else {
-                res.text().then(response => {
-                    throw response
-                })
+                const error = await res.text();
+
+                throw new Error(error);
             }
         } catch (error) {
             setAlert({
                 message: 'Something whent wrong',
-                type: 'error'
-            })
+                type: 'error',
+            });
         } finally {
             setPending(false);
         }
-
-    }
+    };
 
     const handleRefresh = async () => {
         try {
             setPending(true);
 
-            const response = await fetch(`/api/transactions`, {
+            const response: Response = await fetch('/api/transactions', {
                 method: 'GET',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (response.ok) {
-                response.json().then<Transaction[]>(res => {
-                    const orderedExpenses = orderByDate<Transaction>(res);
+                const exps = await response.json() as Transaction[];
+                const orderedExpenses = orderByDate<Transaction>(exps);
 
-                    setExpenses(orderedExpenses);
-
-                    return res;
-                });
+                setExpenses(orderedExpenses);
             } else {
-                response.text().then(error => { throw error });
-            }
+                const error = await response.text();
 
+                throw new Error(error);
+            }
         } catch (error) {
             setAlert({
                 message: 'Something whent wrong...',
-                type: 'error'
-            })
+                type: 'error',
+            });
         } finally {
-            setPending(false)
+            setPending(false);
         }
-    }
+    };
 
     return (
         <div>
@@ -133,7 +132,8 @@ const Index: NextPage = (props: any) => {
                 <Button
                     onClick={handleRefresh}
                     color="primary"
-                    startIcon={<Refresh />}>
+                    startIcon={<Refresh />}
+                >
                     Refresh list
                 </Button>
             </div>
@@ -147,11 +147,13 @@ const Index: NextPage = (props: any) => {
                             <ListItem
                                 button
                                 onClick={handleExpenseClick(expense.id)}
-                                className={classes.listItemContainer}>
+                                className={classes.listItemContainer}
+                            >
                                 <ListItemIcon
                                     className={
-                                        clsx(classes.icon, {[classes.creditIcon]: isPositive })
-                                    }>
+                                        clsx(classes.icon, { [classes.creditIcon]: isPositive })
+                                    }
+                                >
                                     {isPositive ? <ArrowUpward /> : <ArrowDownward />}
                                 </ListItemIcon>
 
@@ -163,16 +165,17 @@ const Index: NextPage = (props: any) => {
                                 <ListItemSecondaryAction>
                                     <Tooltip title={isPositive ? 'Credited amount' : 'Amount debited'}>
                                         <b className={clsx(classes.expenseTotal, {
-                                            [classes.isDebit]: isPositive
-                                        })}>
+                                            [classes.isDebit]: isPositive,
+                                        })}
+                                        >
                                             {isPositive && '+ '}
                                             {toMoney(expense.amount, 'USD')}
                                         </b>
                                     </Tooltip>
                                 </ListItemSecondaryAction>
                             </ListItem>
-                      </Tooltip>
-                    )
+                        </Tooltip>
+                    );
                 })}
             </List>
 
@@ -183,7 +186,8 @@ const Index: NextPage = (props: any) => {
                     timeout={200}
                     style={{
                         transitionDelay: '400ms',
-                    }}>
+                    }}
+                >
                     <Fab color="primary" className={classes.fab}>
                         <Add />
                     </Fab>
@@ -195,9 +199,14 @@ const Index: NextPage = (props: any) => {
                 show={alertModal || pending}
                 onClickAction={handleDeleteExpense}
                 onClose={handleToggleModal}
-                isLoading={pending}>
+                isLoading={pending}
+            >
                 <span>
-                    You're about to <b>delete</b> this transaction from the history list
+                    You&apos;re about to
+                    {' '}
+                    <b>delete</b>
+                    {' '}
+                    this transaction from the history list
                 </span>
             </Modal>
 
@@ -207,14 +216,14 @@ const Index: NextPage = (props: any) => {
                 </Alert>
             </Snackbar>
         </div>
-    )
+    );
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
     const expenses = await readTransactions();
-    const orderedExpenses = orderByDate(expenses)
+    const orderedExpenses = orderByDate(expenses);
 
-    return { props: { expenses: orderedExpenses }};
-}
+    return { props: { transactions: orderedExpenses } };
+};
 
 export default Index;

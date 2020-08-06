@@ -1,6 +1,7 @@
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from '@material-ui/styles';
 import { motion } from 'framer-motion';
+import { AppProps } from 'next/app';
 
 // Components
 import { Layout } from '../../components/Layout';
@@ -8,7 +9,7 @@ import { Layout } from '../../components/Layout';
 // Theme
 import { theme } from '../../theme';
 
-const App = ({ Component, pageProps, router }) => {
+const App = ({ Component, pageProps, router }: AppProps ) => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />

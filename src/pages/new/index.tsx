@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { NextPage } from 'next';
 import clsx from 'clsx';
 
 // Components
-import { Button, TextField, makeStyles, CircularProgress, Snackbar, Paper, Theme } from '@material-ui/core';
+import {
+    Button, TextField, CircularProgress, Snackbar,
+} from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 
 // Types
-import { TransactionValues, AlertMessage } from '../../types';
+import { TransactionValues, AlertMessage, TransactionErrors } from '../../types';
 
-// Contants
+// Constants
 import { defaultErrors } from '../../contants';
 
 // Styles
@@ -19,91 +21,99 @@ import { useStyles } from './styles';
 const initialState: TransactionValues = {
     date: '',
     description: '',
-    amount: 0
-}
+    amount: 0,
+};
 
-// Overriding amount key
-const initialErrors: Omit<TransactionValues, 'amount'> & { amount: string } = {
+const initialErrors: TransactionErrors = {
     ...initialState,
-    amount: ''
+    amount: '',
 };
 
 const initialAlert: AlertMessage = {
     message: '',
-    type: 'success'
+    type: 'success',
 };
 
 const New: NextPage = () => {
-    const [formData, setFormData] = useState(initialState);
-    const [errors, setErrors] = useState(initialErrors);
-    const [valid, setValid] = useState<boolean>(false)
+    const [formData, setFormData] = useState<TransactionValues>(initialState);
+    const [errors, setErrors] = useState<TransactionErrors>(initialErrors);
+    const [valid, setValid] = useState<boolean>(false);
     const [pending, setPending] = useState<boolean>(false);
     const [alert, setAlert] = useState<AlertMessage>(initialAlert);
     const classes = useStyles();
 
+    const clearError = (field: keyof TransactionValues) => {
+        setErrors((formErrors: TransactionErrors) => ({
+            ...formErrors,
+            [field]: '',
+        }));
+    };
+
     const handleValidate = () => {
-        const fields = Object.keys(formData);
+        const fields: Array<keyof TransactionValues> = Object.keys(
+            formData,
+        ) as Array<keyof TransactionValues>;
 
-        fields.map((field: string) => {
+        fields.forEach((field: keyof TransactionValues) => {
             if (!formData[field] && formData[field] !== 0) {
-                setErrors(errors => ({
-                    ...errors,
-                    [field]: defaultErrors.cantBeEmpty
-                }))
+                setErrors((formErrors: TransactionErrors) => ({
+                    ...formErrors,
+                    [field]: defaultErrors.cantBeEmpty,
+                }));
 
-                setValid(false)
+                setValid(false);
             } else if (field === 'amount' && formData[field] === 0) {
-                setErrors(errors => ({
-                    ...errors,
-                    [field]: defaultErrors.cantBeZero
-                }))
+                setErrors((formErrors: TransactionErrors) => ({
+                    ...formErrors,
+                    [field]: defaultErrors.cantBeZero,
+                }));
 
                 setValid(false);
             } else {
                 setValid(true);
             }
-        })
+        });
     };
 
-    const handleChange = (event) => {
-        const value = event.target.value;
-        const name = event.target.name;
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        const { name } = event.target;
 
-        setFormData(formData => ({
-            ...formData,
-            [name]: value
-        }))
+        setFormData((formValues: TransactionValues) => ({
+            ...formValues,
+            [name]: value,
+        }));
 
-        clearError(name);
-    }
+        clearError(name as keyof TransactionValues);
+    };
 
-    const handleSubmit = async (event) => {
-        event && event.preventDefault()
+    const handleSubmit = async (event: FormEvent) => {
+        if (event && event.preventDefault) event.preventDefault();
 
         if (valid) {
             setPending(true);
 
             try {
-                await fetch(`/api/transactions`, {
+                await fetch('/api/transactions', {
                     method: 'POST',
                     body: JSON.stringify(formData),
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
                 });
 
                 setAlert({
                     message: 'Transactions submitted successfully!',
-                    type: 'success'
-                })
+                    type: 'success',
+                });
 
-                setFormData(initialState)
+                setFormData(initialState);
             } catch (error) {
                 setAlert({
                     message: 'Something went wrong!',
-                    type: 'error'
-                })
+                    type: 'error',
+                });
             } finally {
                 setPending(false);
             }
@@ -112,14 +122,7 @@ const New: NextPage = () => {
 
     const handleCloseAlert = () => {
         setAlert(initialAlert);
-    }
-
-    const clearError = (field: keyof TransactionValues) => {
-        setErrors(errors => ({
-            ...errors,
-            [field]: ''
-        }))
-    }
+    };
 
     return (
         <div>
@@ -140,8 +143,8 @@ const New: NextPage = () => {
                             classes={{
                                 root: clsx(
                                     classes.input,
-                                    classes.spacedInput
-                                )
+                                    classes.spacedInput,
+                                ),
                             }}
                             label="Date"
                             type="date"
@@ -155,7 +158,7 @@ const New: NextPage = () => {
                             onChange={handleChange}
                             onBlur={handleValidate}
                             classes={{
-                                root: classes.input
+                                root: classes.input,
                             }}
                             error={Boolean(errors.amount)}
                             defaultValue={initialState.amount}
@@ -173,7 +176,7 @@ const New: NextPage = () => {
                             onChange={handleChange}
                             onBlur={handleValidate}
                             classes={{
-                                root: classes.input
+                                root: classes.input,
                             }}
                             error={Boolean(errors.description)}
                             multiline
@@ -194,7 +197,8 @@ const New: NextPage = () => {
                                 size="large"
                                 color="primary"
                                 disabled={pending}
-                                endIcon={<CloudUpload />}>
+                                endIcon={<CloudUpload />}
+                            >
                                 Submit
                             </Button>
 
@@ -211,6 +215,6 @@ const New: NextPage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default New;
