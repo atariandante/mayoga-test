@@ -57,11 +57,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: theme.spacing(0, 1),
+        flexDirection: 'column',
+        padding: theme.spacing(0),
         paddingTop: theme.spacing(5),
         fontSize: 20,
         color: theme.palette.primary.main,
         fontWeight: 'bold',
+        width: '100%',
         margin: 0,
         ...theme.mixins.toolbar,
     },
@@ -71,8 +73,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
     ul: {
         padding: 0,
+        listStyle: 'none',
+        width: '100%',
     },
     waterMark: {
+        color: theme.palette.grey[700],
     },
     contentWrapper: {
         display: 'flex',
@@ -80,5 +85,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between',
         height: '100%',
+        overflow: 'hidden',
+    },
+    toolbarLogo: {
+        margin: 0,
     },
 }));

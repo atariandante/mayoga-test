@@ -62,8 +62,8 @@ export const Layout = ({ children }: LayoutProps) => {
     const renderContent = () => {
         return (
             <div className={classes.contentWrapper}>
-                <div>
-                    <motion.h5 className={classes.toolbar} initial="hidden" animate="visible" variants={text}>
+                <div className={classes.toolbar}>
+                    <motion.h5 initial="hidden" animate="visible" variants={text}>
                         LOGO / BRAND
                     </motion.h5>
 
